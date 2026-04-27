@@ -19,8 +19,12 @@ const restartBtn = document.getElementById('restart-btn');
 const shareBtn = document.getElementById('share-btn');
 const replayBtn = document.getElementById('replay-sound');
 const endBtn = document.getElementById('end-btn');
+const mainMenuBtn = document.getElementById('main-menu-btn');
 const displayName = document.getElementById('display-name');
 const welcomeMsg = document.getElementById('welcome-msg');
+
+const correctSound = new Audio('voice/correct.mp3');
+const wrongSound = new Audio('voice/failed.mp3');
 
 let score = 0;
 let wrongHits = 0;
@@ -123,6 +127,20 @@ function stopGame() {
     balloons.forEach(b => b.remove());
 }
 
+function showMainMenu() {
+    gameOverOverlay.classList.remove('active');
+    startOverlay.classList.remove('active');
+    nameOverlay.classList.add('active');
+    
+    // Reset stats display
+    score = 0;
+    wrongHits = 0;
+    secondsElapsed = 0;
+    updateScore();
+    updateWrong();
+    updateTimerDisplay();
+}
+
 function updateScore() {
     scoreEl.textContent = score;
     if (score >= 200 && timeAt200 === null) {
@@ -190,6 +208,11 @@ function popBalloon(balloon, letter) {
         score += 10;
         popsTowardTarget++;
         updateScore();
+        
+        // Play correct sound
+        correctSound.currentTime = 0;
+        correctSound.play().catch(e => console.log("Correct sound failed:", e));
+        
         const rect = balloon.getBoundingClientRect();
         createParticles(rect.left + rect.width/2, rect.top + rect.height/2, balloon.style.backgroundColor);
         balloon.classList.add('popping');
@@ -200,6 +223,11 @@ function popBalloon(balloon, letter) {
     } else {
         wrongHits++;
         updateWrong();
+        
+        // Play wrong sound
+        wrongSound.currentTime = 0;
+        wrongSound.play().catch(e => console.log("Wrong sound failed:", e));
+        
         balloon.style.animation = 'shake 0.3s';
         score = Math.max(0, score - 5);
         updateScore();
@@ -291,6 +319,7 @@ async function shareResults() {
 // Event Listeners
 startBtn.addEventListener('click', startGame);
 restartBtn.addEventListener('click', startGame);
+mainMenuBtn.addEventListener('click', showMainMenu);
 shareBtn.addEventListener('click', shareResults);
 replayBtn.addEventListener('click', () => { if (currentTarget) playSound(currentTarget.sound); });
 
