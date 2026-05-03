@@ -88,7 +88,7 @@ function startGame() {
     createClouds();
     setNewTarget();
 
-    spawnInterval = setInterval(spawnBalloon, 900);
+    spawnInterval = setInterval(spawnBalloon, 1100);
     targetSoundInterval = setInterval(() => {
         if (currentTarget && gameActive) playSound(currentTarget.sound);
     }, 4000);
