@@ -11,8 +11,10 @@ const finalScoreEl = document.getElementById('final-score');
 const finalWrongEl = document.getElementById('final-wrong');
 const finalTimeEl = document.getElementById('final-time');
 const finalNameTitle = document.getElementById('final-name-title');
+const timeTo100El = document.getElementById('time-to-100');
 const timeTo200El = document.getElementById('time-to-200');
-const milestoneBox = document.getElementById('milestone-box');
+const milestone100Box = document.getElementById('milestone-100');
+const milestone200Box = document.getElementById('milestone-200');
 
 const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
@@ -36,7 +38,9 @@ let gameTimerInterval = null;
 let popsTowardTarget = 0;
 let playerName = "Player";
 let secondsElapsed = 0;
+let timeAt100 = null;
 let timeAt200 = null;
+let targetPool = [];
 
 const letters = [
     { char: 'ا', sound: "voice/saying 'alif'.m4a", display: 'Alif' },
@@ -75,7 +79,9 @@ function startGame() {
     wrongHits = 0;
     secondsElapsed = 0;
     popsTowardTarget = 0;
+    timeAt100 = null;
     timeAt200 = null;
+    targetPool = [];
 
     updateScore();
     updateWrong();
@@ -117,11 +123,18 @@ function stopGame() {
     finalWrongEl.textContent = wrongHits;
     finalTimeEl.textContent = formatTime(secondsElapsed);
 
+    if (timeAt100) {
+        milestone100Box.style.display = 'block';
+        timeTo100El.textContent = formatTime(timeAt100);
+    } else {
+        milestone100Box.style.display = 'none';
+    }
+
     if (timeAt200) {
-        milestoneBox.style.display = 'block';
+        milestone200Box.style.display = 'block';
         timeTo200El.textContent = formatTime(timeAt200);
     } else {
-        milestoneBox.style.display = 'none';
+        milestone200Box.style.display = 'none';
     }
 
     gameOverOverlay.classList.add('active');
@@ -145,12 +158,15 @@ function showMainMenu() {
 
 function updateScore() {
     scoreEl.textContent = score;
+    if (score >= 100 && timeAt100 === null) {
+        timeAt100 = secondsElapsed;
+    }
     if (score >= 200 && timeAt200 === null) {
         timeAt200 = secondsElapsed;
     }
 
-    // Auto-end at 300
-    if (score >= 300) {
+    // Auto-end at 200
+    if (score >= 200) {
         setTimeout(stopGame, 500); // Small delay for the last pop animation
     }
 }
@@ -170,13 +186,16 @@ function formatTime(sec) {
 }
 
 function setNewTarget() {
-    const oldTarget = currentTarget;
-    let nextTarget;
-    do {
-        nextTarget = letters[Math.floor(Math.random() * letters.length)];
-    } while (nextTarget === oldTarget && letters.length > 1);
+    if (targetPool.length === 0) {
+        // Refill pool and shuffle
+        targetPool = [...letters];
+        for (let i = targetPool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [targetPool[i], targetPool[j]] = [targetPool[j], targetPool[i]];
+        }
+    }
 
-    currentTarget = nextTarget;
+    currentTarget = targetPool.pop();
     targetLabel.textContent = currentTarget.char;
 
     // Add class for centering harakah alone

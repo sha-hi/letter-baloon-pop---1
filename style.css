@@ -277,6 +277,16 @@ body, html {
     border-radius: 15px;
 }
 
+.res-item.full-width {
+    grid-column: span 2;
+    background: #e8f4fd;
+}
+
+.res-item.milestone {
+    display: none; /* Controlled by JS */
+    border: 2px dashed var(--accent-color);
+}
+
 .res-item p {
     font-size: 1rem;
     margin-bottom: 5px;
