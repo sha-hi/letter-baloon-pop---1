@@ -212,6 +212,27 @@ body, html {
     pointer-events: none;
 }
 
+.harakah-top {
+    margin-top: 45px !important;
+    font-size: 7rem !important;
+}
+
+.harakah-bottom {
+    margin-top: -30px !important;
+    font-size: 7rem !important;
+}
+
+/* For target label as well */
+#target-label.harakah-top {
+    margin-top: 20px !important;
+    display: inline-block;
+}
+
+#target-label.harakah-bottom {
+    margin-top: -15px !important;
+    display: inline-block;
+}
+
 /* Overlays */
 .overlay {
     position: fixed;

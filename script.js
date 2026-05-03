@@ -39,11 +39,13 @@ let secondsElapsed = 0;
 let timeAt200 = null;
 
 const letters = [
-    { char: 'ا', sound: 'voice/sound of alif.m4a', display: 'Alif' },
-    { char: 'اَ', sound: "voice/saying'fathah'.m4a", display: 'Fathah' },
+    { char: 'ا', sound: "voice/saying 'alif'.m4a", display: 'Alif' },
+    { char: 'َ', sound: "voice/saying'fathah'.m4a", display: 'Fathah' },
+    { char: 'ِ', sound: "voice/saying ' kasar'.m4a", display: 'Kasrah' },
+    { char: 'ُ', sound: "voice/saying 'Ḍammah'.m4a", display: 'Dammah' },
     { char: 'اَ', sound: 'voice/sound of alif with fathah.m4a', display: 'Alif Fathah' },
-    { char: 'اِ', sound: "voice/saying ' kasr'.m4a", display: 'Kasrah' },
-    { char: 'اِ', sound: 'voice/sound of alif with kasar.m4a', display: 'Alif Kasrah' }
+    { char: 'اِ', sound: 'voice/sound of alif with kasar.m4a', display: 'Alif Kasrah' },
+    { char: 'اُ', sound: 'voice/sound of alif with Ḍammah.m4a', display: 'Alif Dammah' }
 ];
 
 const colors = ['#ff4757', '#2ed573', '#1e90ff', '#ffa502', '#3742fa', '#e84393', '#f9ca24', '#6c5ce7'];
@@ -74,23 +76,23 @@ function startGame() {
     secondsElapsed = 0;
     popsTowardTarget = 0;
     timeAt200 = null;
-    
+
     updateScore();
     updateWrong();
     updateTimerDisplay();
-    
+
     gameActive = true;
     startOverlay.classList.remove('active');
     gameOverOverlay.classList.remove('active');
-    
+
     createClouds();
     setNewTarget();
-    
-    spawnInterval = setInterval(spawnBalloon, 1500);
+
+    spawnInterval = setInterval(spawnBalloon, 900);
     targetSoundInterval = setInterval(() => {
         if (currentTarget && gameActive) playSound(currentTarget.sound);
     }, 4000);
-    
+
     gameTimerInterval = setInterval(() => {
         if (gameActive) {
             secondsElapsed++;
@@ -105,23 +107,23 @@ function stopGame() {
     clearInterval(spawnInterval);
     clearInterval(targetSoundInterval);
     clearInterval(gameTimerInterval);
-    
+
     // Stop any playing sound
     audioPlayer.pause();
     audioPlayer.currentTime = 0;
-    
+
     finalNameTitle.textContent = playerName;
     finalScoreEl.textContent = score;
     finalWrongEl.textContent = wrongHits;
     finalTimeEl.textContent = formatTime(secondsElapsed);
-    
+
     if (timeAt200) {
         milestoneBox.style.display = 'block';
         timeTo200El.textContent = formatTime(timeAt200);
     } else {
         milestoneBox.style.display = 'none';
     }
-    
+
     gameOverOverlay.classList.add('active');
     const balloons = document.querySelectorAll('.balloon');
     balloons.forEach(b => b.remove());
@@ -131,7 +133,7 @@ function showMainMenu() {
     gameOverOverlay.classList.remove('active');
     startOverlay.classList.remove('active');
     nameOverlay.classList.add('active');
-    
+
     // Reset stats display
     score = 0;
     wrongHits = 0;
@@ -146,7 +148,7 @@ function updateScore() {
     if (score >= 200 && timeAt200 === null) {
         timeAt200 = secondsElapsed;
     }
-    
+
     // Auto-end at 300
     if (score >= 300) {
         setTimeout(stopGame, 500); // Small delay for the last pop animation
@@ -173,9 +175,18 @@ function setNewTarget() {
     do {
         nextTarget = letters[Math.floor(Math.random() * letters.length)];
     } while (nextTarget === oldTarget && letters.length > 1);
-    
+
     currentTarget = nextTarget;
     targetLabel.textContent = currentTarget.char;
+
+    // Add class for centering harakah alone
+    targetLabel.classList.remove('harakah-top', 'harakah-bottom');
+    if (['َ', 'ُ'].includes(currentTarget.char)) {
+        targetLabel.classList.add('harakah-top');
+    } else if (currentTarget.char === 'ِ') {
+        targetLabel.classList.add('harakah-bottom');
+    }
+
     popsTowardTarget = 0;
     playSound(currentTarget.sound);
 }
@@ -194,6 +205,11 @@ function spawnBalloon() {
     balloon.style.backgroundColor = randomColor;
     const text = document.createElement('span');
     text.className = 'balloon-text';
+    if (['َ', 'ُ'].includes(letter.char)) {
+        text.classList.add('harakah-top');
+    } else if (letter.char === 'ِ') {
+        text.classList.add('harakah-bottom');
+    }
     text.textContent = letter.char;
     balloon.appendChild(text);
     gameScreen.appendChild(balloon);
@@ -208,13 +224,13 @@ function popBalloon(balloon, letter) {
         score += 10;
         popsTowardTarget++;
         updateScore();
-        
+
         // Play correct sound
         correctSound.currentTime = 0;
         correctSound.play().catch(e => console.log("Correct sound failed:", e));
-        
+
         const rect = balloon.getBoundingClientRect();
-        createParticles(rect.left + rect.width/2, rect.top + rect.height/2, balloon.style.backgroundColor);
+        createParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, balloon.style.backgroundColor);
         balloon.classList.add('popping');
         setTimeout(() => {
             if (balloon.parentElement) balloon.remove();
@@ -223,11 +239,11 @@ function popBalloon(balloon, letter) {
     } else {
         wrongHits++;
         updateWrong();
-        
+
         // Play wrong sound
         wrongSound.currentTime = 0;
         wrongSound.play().catch(e => console.log("Wrong sound failed:", e));
-        
+
         balloon.style.animation = 'shake 0.3s';
         score = Math.max(0, score - 5);
         updateScore();
@@ -266,7 +282,7 @@ function createClouds() {
         cloud.className = 'cloud';
         const width = 100 + Math.random() * 100;
         cloud.style.width = `${width}px`;
-        cloud.style.height = `${width/2}px`;
+        cloud.style.height = `${width / 2}px`;
         cloud.style.top = `${Math.random() * 40}%`;
         cloud.style.left = `-200px`;
         cloud.style.animationDuration = `${20 + Math.random() * 30}s`;
@@ -280,23 +296,23 @@ async function shareResults() {
     const target = document.getElementById('share-content');
     const originalShadow = target.style.boxShadow;
     target.style.boxShadow = 'none'; // Clean up for screenshot
-    
+
     try {
         const canvas = await html2canvas(target, {
             backgroundColor: '#ffffff',
             scale: 2, // Better quality
             logging: false
         });
-        
+
         target.style.boxShadow = originalShadow;
-        
+
         const image = canvas.toDataURL('image/png');
-        
+
         // Use Web Share API if available
         if (navigator.share) {
             const blob = await (await fetch(image)).blob();
             const file = new File([blob], 'arabic-balloon-score.png', { type: 'image/png' });
-            
+
             await navigator.share({
                 files: [file],
                 title: 'My Arabic Balloon Game Score!',
