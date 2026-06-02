@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Arabic Balloon Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Amiri:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Background Elements -->
+        <div class="sky-background"></div>
+        <div class="clouds-container"></div>
+
+        <!-- UI Elements -->
+        <div id="ui-layer">
+            <div class="stats">
+                <div class="stat-item user-info">
+                    <span id="display-name">Player</span>
+                </div>
+                <div class="stat-group">
+                    <div class="stat-item">
+                        <span class="label">Score:</span>
+                        <span id="score">0</span>
+                        <span class="goal">/ 200</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Wrong:</span>
+                        <span id="wrong-count" class="wrong-val">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Time:</span>
+                        <span id="timer">00:00</span>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div class="stat-item target-box">
+                    <button id="replay-sound" class="icon-btn">🔊</button>
+                    <span id="target-label" style="display: none;"></span>
+                </div>
+                <button id="quick-q-btn" class="secondary-btn" style="background: #3742fa; border-color: white; padding: 12px 15px;">❓ Ask</button>
+                <button id="teacher-btn" class="secondary-btn" style="background: #ffa502; border-color: white;">⚙️ Settings</button>
+                <button id="global-main-menu-btn" class="secondary-btn" style="background: #2f3542; border-color: white;">🏠 Main Menu</button>
+                <button id="end-btn" class="secondary-btn">End Game</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen"></div>
+
+        <!-- Overlays -->
+        <div id="name-overlay" class="overlay active">
+            <div class="overlay-content">
+                <h1>Choose Your Name</h1>
+                <div class="name-grid">
+                    <button class="name-btn">Aysha Azlyn</button>
+                    <button class="name-btn">Izza Maryam</button>
+                    <button class="name-btn">Salman</button>
+                    <button class="name-btn">Sinan</button>
+                    <button class="name-btn">Lubaba</button>
+                </div>
+                <button id="name-main-menu-btn" class="secondary-btn" style="background: #2f3542; margin-top: 15px; width: 100%;">🏠 Main Menu</button>
+            </div>
+        </div>
+
+        <div id="letter-overlay" class="overlay">
+            <div class="overlay-content">
+                <h1>Choose Letters</h1>
+                <p style="margin-bottom: 15px; color: #576574;">Select the Arabic letters you want to play with!</p>
+                
+                <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
+                    <button id="all-letters-btn" class="name-btn" style="padding: 10px 20px; font-size: 1rem; width: auto; margin: 0;">✨ All Letters</button>
+                    <button id="clear-letters-btn" class="name-btn" style="padding: 10px 20px; font-size: 1rem; width: auto; margin: 0;">Clear Selection</button>
+                </div>
+
+                <div class="name-grid" id="letter-grid">
+                    <button class="name-btn letter-sel-btn" data-letter="alif">ا</button>
+                    <button class="name-btn letter-sel-btn" data-letter="ba">ب</button>
+                    <button class="name-btn letter-sel-btn" data-letter="taa">ت</button>
+                    <button class="name-btn letter-sel-btn" data-letter="daal">د</button>
+                </div>
+
+                <button id="confirm-letters-btn" class="primary-btn" style="margin-top: 25px; width: 100%;">Continue</button>
+                <button id="letter-main-menu-btn" class="secondary-btn" style="background: #2f3542; margin-top: 15px; width: 100%;">🏠 Main Menu</button>
+            </div>
+        </div>
+
+        <div id="start-overlay" class="overlay">
+            <div class="overlay-content">
+                <h1 id="welcome-msg">Hello!</h1>
+                <p id="start-instructions-p" style="margin-bottom: 20px;">Pop the balloons that match the sound!</p>
+                <button id="start-btn" class="primary-btn" style="width: 100%;">Start Playing!</button>
+                <button id="start-main-menu-btn" class="secondary-btn" style="background: #2f3542; margin-top: 15px; width: 100%;">🏠 Main Menu</button>
+            </div>
+        </div>
+
+        <div id="settings-overlay" class="overlay">
+            <div class="overlay-content">
+                <h1 style="color: #2f3542;">Settings</h1>
+                <div class="settings-grid" style="text-align: left; margin: 25px 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label style="font-size: 1.1rem; font-weight: bold; color: #576574;">Letters to Play:</label>
+                        <button id="settings-all-letters-btn" class="name-btn" style="padding: 5px 10px; font-size: 0.85rem; margin: 0; width: auto; height: auto;">✨ Select All</button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 8px; margin-bottom: 20px;">
+                        <button class="name-btn settings-letter-btn active" data-letter="alif" style="padding: 10px; font-size: 1.2rem;">ا</button>
+                        <button class="name-btn settings-letter-btn" data-letter="ba" style="padding: 10px; font-size: 1.2rem;">ب</button>
+                        <button class="name-btn settings-letter-btn" data-letter="taa" style="padding: 10px; font-size: 1.2rem;">ت</button>
+                        <button class="name-btn settings-letter-btn" data-letter="daal" style="padding: 10px; font-size: 1.2rem;">د</button>
+                    </div>
+
+                    <label style="font-size: 1.1rem; font-weight: bold; color: #576574;">Question Interval: <span id="prob-val" style="color: #ff4757;">10%</span></label>
+                    <input type="range" id="prob-slider" min="0" max="3" value="1" style="width: 100%; margin-top: 10px; margin-bottom: 20px;">
+                    
+                    <label style="font-size: 1.1rem; font-weight: bold; color: #576574;">Letter Probability: <span id="letter-prob-val" style="color: #1e90ff;">50%</span></label>
+                    <input type="range" id="letter-prob-slider" min="0" max="4" value="4" style="width: 100%; margin-top: 10px;">
+                    <p style="color: #747d8c; font-size: 0.85rem; margin-top: 5px;">Higher means the target letter appears more often.</p>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+                    <button id="close-settings-btn" class="secondary-btn">Close</button>
+                    <button id="settings-main-menu-btn" class="secondary-btn" style="background: #2f3542;">🏠 Main Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="question-overlay" class="overlay">
+            <div class="overlay-content question-content">
+                <div class="confetti-effect"></div>
+                <h1 style="color: #ff4757; font-size: 2.2rem; margin-bottom: 10px;">Interactive Question!</h1>
+                <p style="font-size: 1.3rem; color: #2f3542; font-weight: bold;">Tell your teacher the letter aloud!</p>
+                
+                <div id="question-letter-container" class="interactive-card">
+                    <div id="question-letter" class="balloon-text" style="color: #3742fa; font-size: 10rem; text-shadow: 3px 3px 15px rgba(0,0,0,0.15); pointer-events: auto;">ا</div>
+                </div>
+
+                <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+                    <button id="replay-q-btn" class="icon-btn pulse" style="width: 70px; height: 70px; font-size: 2.5rem; border: 4px solid #dfe4ea; background: white; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">🔊</button>
+                    <button id="continue-game-btn" class="primary-btn bounce-in" style="font-size: 1.4rem; padding: 15px 40px; background: linear-gradient(135deg, #2ed573 0%, #7bed9f 100%); border: none; box-shadow: 0 10px 25px rgba(46, 213, 115, 0.4);">Continue (+20 pts)</button>
+                    <button id="question-main-menu-btn" class="secondary-btn" style="background: #2f3542; margin-top: 5px;">🏠 Main Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-over-overlay" class="overlay">
+            <div id="share-content" class="overlay-content">
+                <h1>Game Summary</h1>
+                <h2 id="final-name-title">Player Name</h2>
+
+                <div class="results-grid">
+                    <div class="res-item">
+                        <p>Final Score</p>
+                        <span id="final-score">0</span>
+                    </div>
+                    <div class="res-item">
+                        <p>Wrong Hits</p>
+                        <span id="final-wrong">0</span>
+                    </div>
+                    <div class="res-item full-width">
+                        <p>Total Time</p>
+                        <span id="final-time">00:00</span>
+                    </div>
+                    <div id="milestone-100" class="res-item milestone">
+                        <p>Time to reach 100</p>
+                        <span id="time-to-100">--</span>
+                    </div>
+                    <div id="milestone-200" class="res-item milestone">
+                        <p>Time to reach 200</p>
+                        <span id="time-to-200">--</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="restart-btn" class="primary-btn">Play Again</button>
+                    <button id="main-menu-btn" class="secondary-btn">Main Menu</button>
+                    <button id="share-btn" class="share-btn">Share Results 📤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
