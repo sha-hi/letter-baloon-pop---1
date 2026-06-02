@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Falling Letters ☁️</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Amiri:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Sky/Clouds Background -->
+        <div class="sky-background"></div>
+        <div class="clouds-container"></div>
+        <div class="sky-decor">
+            <div class="rainbow">🌈</div>
+            <div class="sun">☀️</div>
+        </div>
+
+        <!-- Top Dashboard (Stats) -->
+        <div id="ui-layer">
+            <div class="stats">
+                <div class="stat-item user-info">
+                    <span id="display-name">Player</span>
+                </div>
+                <div class="stat-group">
+                    <div class="stat-item">
+                        <span class="label">Score:</span>
+                        <span id="score">0</span>
+                        <span class="goal">/ 150</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Streak:</span>
+                        <span id="streak-count" class="streak-val">🔥 0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Time:</span>
+                        <span id="timer">00:00</span>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div class="button-group">
+                    <button id="sound-loop-toggle" class="secondary-btn toggle-btn active" style="background: #ffa502; border-color: white;">🔁 Auto Sound: On</button>
+                    <button id="settings-btn" class="secondary-btn" style="background: #a29bfe; border-color: white;">⚙️ Settings</button>
+                    <button id="main-menu-btn-top" class="secondary-btn" style="background: #2f3542; border-color: white;">🏠 Main Menu</button>
+                    <button id="end-btn" class="secondary-btn" style="background: #ff4757; border-color: white;">End Game</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Playground Screen -->
+        <div id="game-screen" class="game-screen" style="display: none;">
+            <!-- Top Target Announcement -->
+            <div class="target-announcement">
+                <div class="target-cloud">
+                    <span class="instruction-text">Catch only:</span>
+                    <span id="target-letter-display" class="target-letter">تَ</span>
+                    <button id="replay-sound-btn" class="speaker-btn pulse">🔊 Hear Sound</button>
+                </div>
+            </div>
+
+            <!-- Falling Letters Area -->
+            <div id="falling-area" class="falling-area">
+                <!-- Falling letters will spawn here dynamically -->
+            </div>
+
+            <!-- Controllable Basket -->
+            <div class="basket-track">
+                <div id="basket" class="basket">
+                    <div class="basket-rim"></div>
+                    <div class="basket-body">🧺</div>
+                    <div class="basket-glow"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OVERLAYS -->
+
+        <!-- 1. Choose Player Name Overlay -->
+        <div id="name-overlay" class="overlay active">
+            <div class="overlay-content">
+                <h1>Choose Your Name</h1>
+                <div class="name-grid">
+                    <button class="name-btn">Aysha Azlyn</button>
+                    <button class="name-btn">Izza Maryam</button>
+                    <button class="name-btn">Salman</button>
+                    <button class="name-btn">Sinan</button>
+                    <button class="name-btn">Lubaba</button>
+                </div>
+                <button id="name-main-menu-btn" class="secondary-btn" style="background: #2f3542; margin-top: 15px; width: 100%;">🏠 Main Menu</button>
+            </div>
+        </div>
+
+        <!-- 2. Choose Practice Group Overlay -->
+        <div id="group-overlay" class="overlay">
+            <div class="overlay-content">
+                <h1 id="welcome-msg">Hello!</h1>
+                <p style="margin-bottom: 25px; color: #576574; font-weight: bold;">Select a letter to practice its different harakaths!</p>
+                
+                <div class="group-grid">
+                    <button class="group-btn active" data-group="alif">
+                        <span class="group-icon">ا</span>
+                        <h3>Group 1</h3>
+                        <p>اَ  اِ  اُ  اْ  اٌ</p>
+                    </button>
+                    <button class="group-btn" data-group="ba">
+                        <span class="group-icon">ب</span>
+                        <h3>Group 2</h3>
+                        <p>بَ  بِ  بُ  بْ  بٌ</p>
+                    </button>
+                    <button class="group-btn" data-group="ta">
+                        <span class="group-icon">ت</span>
+                        <h3>Group 3</h3>
+                        <p>تَ  تِ  تُ  تْ  تٌ</p>
+                    </button>
+                    <button class="group-btn" data-group="daal">
+                        <span class="group-icon">د</span>
+                        <h3>Group 4</h3>
+                        <p>دَ  دِ  دُ  دْ</p>
+                    </button>
+                </div>
+
+                <button id="start-game-btn" class="primary-btn" style="margin-top: 25px; width: 100%;">Start Playing! 🚀</button>
+                <button id="group-main-menu-btn" class="secondary-btn" style="background: #2f3542; margin-top: 15px; width: 100%;">🏠 Main Menu</button>
+            </div>
+        </div>
+
+        <!-- 3. Settings Overlay -->
+        <div id="settings-overlay" class="overlay">
+            <div class="overlay-content">
+                <h1>Settings ⚙️</h1>
+                <div style="text-align: left; margin: 25px 0;">
+                    <label style="font-size: 1.1rem; font-weight: bold; color: #576574; display: block; margin-bottom: 10px;">
+                        Target Letter Probability: <span id="prob-val" style="color: #4facfe;">35%</span>
+                    </label>
+                    <input type="range" id="prob-slider" min="0" max="4" value="2" style="width: 100%; height: 8px; margin-bottom: 15px; cursor: pointer;">
+                    <p style="color: #747d8c; font-size: 0.9rem; line-height: 1.4;">
+                        Adjust how often the correct target letter falls from the sky compared to incorrect letters. Higher probability makes the target fall more often.
+                    </p>
+                </div>
+                <button id="close-settings-btn" class="primary-btn" style="width: 100%;">Save & Close</button>
+            </div>
+        </div>
+
+        <!-- 4. Game Over Overlay -->
+        <div id="game-over-overlay" class="overlay">
+            <div id="share-content" class="overlay-content">
+                <div class="confetti-effect"></div>
+                <h1>☁️ Sky Adventure Completed! ☁️</h1>
+                <h2 id="final-name-title">Player Name</h2>
+
+                <div class="results-grid">
+                    <div class="res-item">
+                        <p>Final Score</p>
+                        <span id="final-score">0</span>
+                    </div>
+                    <div class="res-item">
+                        <p>Wrong Catches</p>
+                        <span id="final-wrong">0</span>
+                    </div>
+                    <div class="res-item">
+                        <p>Best Streak</p>
+                        <span id="final-streak">🔥 0</span>
+                    </div>
+                    <div class="res-item">
+                        <p>Total Time</p>
+                        <span id="final-time">00:00</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="restart-btn" class="primary-btn">Play Again 🔁</button>
+                    <button id="main-menu-btn" class="secondary-btn" style="background: #2f3542;">Main Menu 🏠</button>
+                    <button id="share-btn" class="share-btn">Share Scorecard 📤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

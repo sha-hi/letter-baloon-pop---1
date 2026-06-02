@@ -1,115 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>Arabic Balloon Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Madrasa Class 1 Games</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Amiri:wght@400;700&display=swap"
-        rel="stylesheet">
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
-    <div id="game-container">
-        <!-- Background Elements -->
-        <div class="sky-background"></div>
-        <div class="clouds-container"></div>
-
-        <!-- UI Elements -->
-        <div id="ui-layer">
-            <div class="stats">
-                <div class="stat-item user-info">
-                    <span id="display-name">Player</span>
-                </div>
-                <div class="stat-group">
-                    <div class="stat-item">
-                        <span class="label">Score:</span>
-                        <span id="score">0</span>
-                        <span class="goal">/ 200</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="label">Wrong:</span>
-                        <span id="wrong-count" class="wrong-val">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="label">Time:</span>
-                        <span id="timer">00:00</span>
-                    </div>
-                </div>
-                <div class="stat-item target-box">
-                    <button id="replay-sound" class="icon-btn">🔊</button>
-                    <span id="target-label">?</span>
-                </div>
-                <button id="end-btn" class="secondary-btn">End Game</button>
-            </div>
-        </div>
-
-        <!-- Game Screen -->
-        <div id="game-screen"></div>
-
-        <!-- Overlays -->
-        <div id="name-overlay" class="overlay active">
-            <div class="overlay-content">
-                <h1>Choose Your Name</h1>
-                <div class="name-grid">
-                    <button class="name-btn">Aysha Azlyn</button>
-                    <button class="name-btn">Izza Maryam</button>
-                    <button class="name-btn">Salman</button>
-                    <button class="name-btn">Sinan</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="start-overlay" class="overlay">
-            <div class="overlay-content">
-                <h1 id="welcome-msg">Hello!</h1>
-                <p>Pop the balloons that match the sound!</p>
-                <button id="start-btn" class="primary-btn">Start Playing!</button>
-            </div>
-        </div>
-
-        <div id="game-over-overlay" class="overlay">
-            <div id="share-content" class="overlay-content">
-                <h1>Game Summary</h1>
-                <h2 id="final-name-title">Player Name</h2>
-
-                <div class="results-grid">
-                    <div class="res-item">
-                        <p>Final Score</p>
-                        <span id="final-score">0</span>
-                    </div>
-                    <div class="res-item">
-                        <p>Wrong Hits</p>
-                        <span id="final-wrong">0</span>
-                    </div>
-                    <div class="res-item full-width">
-                        <p>Total Time</p>
-                        <span id="final-time">00:00</span>
-                    </div>
-                    <div id="milestone-100" class="res-item milestone">
-                        <p>Time to reach 100</p>
-                        <span id="time-to-100">--</span>
-                    </div>
-                    <div id="milestone-200" class="res-item milestone">
-                        <p>Time to reach 200</p>
-                        <span id="time-to-200">--</span>
-                    </div>
-                </div>
-
-                <div class="action-buttons">
-                    <button id="restart-btn" class="primary-btn">Play Again</button>
-                    <button id="main-menu-btn" class="secondary-btn">Main Menu</button>
-                    <button id="share-btn" class="share-btn">Share Results 📤</button>
-                </div>
-            </div>
-        </div>
+    <div class="background-decor">
+        <div class="star star1">⭐</div>
+        <div class="star star2">⭐</div>
+        <div class="star star3">⭐</div>
+        <div class="moon">🌙</div>
     </div>
+    
+    <div class="container">
+        <header>
+            <h1>Class 1 Fun & Play!</h1>
+            <p>Welcome to our Madrasa gaming zone. Choose a game to play!</p>
+        </header>
 
+        <main class="games-grid">
+            <!-- Game Card 1 -->
+            <div class="game-card" onclick="window.location.href='baloon 1/index.html'">
+                <div class="game-icon">🎈</div>
+                <h2>Balloon Pop</h2>
+                <p>Pop the balloons and learn!</p>
+                <button class="play-btn">Play Now</button>
+            </div>
+
+            <!-- Game Card 2 -->
+            <div class="game-card" onclick="window.location.href='alif drag/index.html'">
+                <div class="game-icon">🔊</div>
+                <h2>Sound Matching Game</h2>
+                <p>Listen to the sound and drag the correct letter!</p>
+                <button class="play-btn">Play Now</button>
+            </div>
+
+            <!-- Game Card 3 -->
+            <div class="game-card" onclick="window.location.href='falling letters/index.html'">
+                <div class="game-icon">☁️</div>
+                <h2>Falling Letters</h2>
+                <p>Catch the correct letters from the sky!</p>
+                <button class="play-btn">Play Now</button>
+            </div>
+             <!-- Placeholder Game 4 -->
+            <div class="game-card locked">
+                <div class="game-icon">🔤</div>
+                <h2>Coming Soon</h2>
+                <p>Alphabet adventure arriving soon.</p>
+                <button class="play-btn disabled" disabled>Locked</button>
+            </div>
+        </main>
+    </div>
     <script src="script.js"></script>
 </body>
-
 </html>

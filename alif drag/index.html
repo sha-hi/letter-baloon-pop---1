@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Sound Matching Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Amiri:wght@400;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <div id="game-container">
+        <!-- Background Elements -->
+        <div class="sky-background"></div>
+        <div class="clouds-container"></div>
+        <div class="background-decor">
+            <div class="star star1">⭐</div>
+            <div class="star star2">⭐</div>
+            <div class="star star3">⭐</div>
+            <div class="moon">🌙</div>
+        </div>
+
+        <!-- UI / Dashboard Layer -->
+        <div id="ui-layer">
+            <div class="stats">
+                <div class="stat-item user-info">
+                    <span id="display-name">Player</span>
+                </div>
+                <div class="stat-group">
+                    <div class="stat-item">
+                        <span class="label">Score:</span>
+                        <span id="score">0</span>
+                        <span class="goal">/ 150</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Streak:</span>
+                        <span id="streak-count" class="streak-val">🔥 0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Time:</span>
+                        <span id="timer">00:00</span>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div class="button-group">
+                    <button id="sound-loop-toggle" class="secondary-btn toggle-btn active" style="background: #ffa502; border-color: white;">🔁 Auto Sound: On</button>
+                    <button id="main-menu-btn-top" class="secondary-btn" style="background: #2f3542; border-color: white;">🏠 Main Menu</button>
+                    <button id="end-btn" class="secondary-btn" style="background: #ff4757; border-color: white;">End Game</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen (Playground) -->
+        <div id="game-screen" class="game-screen" style="display: none;">
+            <!-- Mascot & Speaker Area -->
+            <div class="mascot-section">
+                <div class="mascot-bubble">
+                    <p id="bubble-instruction">Listen carefully and drag the matching letter below!</p>
+                </div>
+                <div class="mascot-character" id="mascot">
+                    <div class="mascot-body">🦁</div>
+                    <button id="replay-sound-btn" class="speaker-btn pulse">🔊 Hear Sound</button>
+                    <button id="reset-options-btn" class="speaker-btn reset-btn">🔄 Reset Options</button>
+                </div>
+            </div>
+
+            <!-- Target Drop Area (Rectangle Box) -->
+            <div class="drop-zone-container">
+                <div id="drop-target" class="drop-target">
+                    <span class="drop-icon">📥</span>
+                    <span class="drop-label">Drag and Drop here!</span>
+                </div>
+            </div>
+
+            <!-- Draggable Symbols Container -->
+            <div class="options-container" id="options-container">
+                <!-- Draggable items will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- OVERLAYS -->
+        
+        <!-- 1. Choose Player Name Overlay -->
+        <div id="name-overlay" class="overlay active">
+            <div class="overlay-content">
+                <h1>Choose Your Name</h1>
+                <div class="name-grid">
+                    <button class="name-btn">Aysha Azlyn</button>
+                    <button class="name-btn">Izza Maryam</button>
+                    <button class="name-btn">Salman</button>
+                    <button class="name-btn">Sinan</button>
+                    <button class="name-btn">Lubaba</button>
+                </div>
+                <button id="name-main-menu-btn" class="secondary-btn" style="background: #2f3542; margin-top: 15px; width: 100%;">🏠 Main Menu</button>
+            </div>
+        </div>
+
+        <!-- 2. Select Game Mode Overlay -->
+        <div id="mode-overlay" class="overlay">
+            <div class="overlay-content">
+                <h1 id="welcome-msg">Hello!</h1>
+                <p style="margin-bottom: 20px; color: #576574;">Select which Arabic sounds you want to match!</p>
+                
+                <div class="mode-grid">
+                    <button class="mode-btn active" data-mode="alif-harakath">
+                        <span class="mode-icon">اَ اِ اُ اٌ</span>
+                        <h3>Alif with Harakath</h3>
+                    </button>
+                    <button class="mode-btn" data-mode="ba-harakath">
+                        <span class="mode-icon">بَ بِ بُ بٌ</span>
+                        <h3>Ba with Harakath</h3>
+                    </button>
+                    <button class="mode-btn" data-mode="taa-harakath">
+                        <span class="mode-icon">تَ تِ تُ تٌ</span>
+                        <h3>Tha with Harakath</h3>
+                    </button>
+                    <button class="mode-btn" data-mode="harakath-only">
+                        <span class="mode-icon">◌َ  ◌ِ  ◌ُ  ◌ْ</span>
+                        <h3>Harakath only</h3>
+                    </button>
+                    <button class="mode-btn" data-mode="combined">
+                        <span class="mode-icon">🔄 Mixed</span>
+                        <h3>Challenge Mode</h3>
+                    </button>
+                </div>
+
+                <button id="start-game-btn" class="primary-btn" style="margin-top: 25px; width: 100%;">Start Playing! 🚀</button>
+                <button id="mode-main-menu-btn" class="secondary-btn" style="background: #2f3542; margin-top: 15px; width: 100%;">🏠 Main Menu</button>
+            </div>
+        </div>
+
+        <!-- 3. Game Over Overlay -->
+        <div id="game-over-overlay" class="overlay">
+            <div id="share-content" class="overlay-content">
+                <div class="confetti-effect"></div>
+                <h1>🎉 Match Completed! 🎉</h1>
+                <h2 id="final-name-title">Player Name</h2>
+
+                <div class="results-grid">
+                    <div class="res-item">
+                        <p>Final Score</p>
+                        <span id="final-score">0</span>
+                    </div>
+                    <div class="res-item">
+                        <p>Wrong Matches</p>
+                        <span id="final-wrong">0</span>
+                    </div>
+                    <div class="res-item">
+                        <p>Best Streak</p>
+                        <span id="final-streak">🔥 0</span>
+                    </div>
+                    <div class="res-item">
+                        <p>Total Time</p>
+                        <span id="final-time">00:00</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="restart-btn" class="primary-btn">Play Again 🔁</button>
+                    <button id="main-menu-btn" class="secondary-btn" style="background: #2f3542;">Main Menu 🏠</button>
+                    <button id="share-btn" class="share-btn">Share Scorecard 📤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
